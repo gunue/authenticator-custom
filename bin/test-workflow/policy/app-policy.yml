@@ -1,0 +1,242 @@
+- !policy
+  id: test-summon-init-app-db
+  annotations:
+    description: This policy contains the creds to access the summon init app DB
+
+  body:
+    - !group
+
+    - &init-variables
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *init-variables
+
+- !policy
+  id: test-summon-sidecar-app-db
+  annotations:
+    description: This policy contains the creds to access the summon sidecar app DB
+
+  body:
+    - !group
+
+    - &sidecar-variables
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *sidecar-variables
+
+- !policy
+  id: test-summon-sidecar-jwt-app-db
+  annotations:
+    description: This policy contains the creds to access the summon sidecar app DB
+  body:
+    - !group
+
+    - &sidecar-variables-jwt
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *sidecar-variables-jwt
+
+- !policy
+  id: test-secretless-app-db
+  annotations:
+    description: This policy contains the creds to access the secretless app DB
+
+  body:
+    - !group
+
+    - &secretless-variables
+      - !variable password
+      - !variable url
+      - !variable port
+      - !variable host
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secretless-variables
+
+- !policy
+  id: test-secretless-jwt-app-db
+  annotations:
+    description: This policy contains the creds to access the secretless app DB
+  body:
+    - !group
+
+    - &secretless-jwt-variables
+      - !variable password
+      - !variable url
+      - !variable port
+      - !variable host
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secretless-jwt-variables
+
+- !policy
+  id: test-secrets-provider-k8s-app-db
+  annotations:
+    description: This policy contains the creds to access the secrets provider app DB
+
+  body:
+    - !group
+
+    - &secrets-provider-k8s-variables
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secrets-provider-k8s-variables
+
+- !policy
+  id: test-secrets-provider-k8s-jwt-app-db
+  annotations:
+    description: This policy contains the creds to access the secrets provider app DB
+  body:
+    - !group
+
+    - &secrets-provider-k8s-jwt-variables
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secrets-provider-k8s-jwt-variables
+
+- !policy
+  id: test-secrets-provider-p2f-app-db
+  annotations:
+    description: This policy contains the creds to access the secrets provider app DB
+
+  body:
+    - !group
+
+    - &secrets-provider-p2f-variables
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secrets-provider-p2f-variables
+
+- !policy
+  id: test-secrets-provider-p2f-injected-app-db
+  annotations:
+    description: This policy contains the creds to access the secrets provider app DB
+
+  body:
+    - !group
+
+    - &secrets-provider-p2f-injected-variables
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secrets-provider-p2f-injected-variables
+
+- !policy
+  id: test-secrets-provider-rotation-app-db
+  annotations:
+    description: This policy contains the creds to access the secrets provider app DB
+
+  body:
+    - !group
+
+    - &secrets-provider-rotation-variables
+      - !variable password
+      - !variable url
+      - !variable username
+      - !variable counter
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secrets-provider-rotation-variables
+
+- !policy
+  id: test-secrets-provider-p2f-jwt-app-db
+  annotations:
+    description: This policy contains the creds to access the secrets provider app DB
+
+  body:
+    - !group
+
+    - &secrets-provider-p2f-jwt-variables
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secrets-provider-p2f-jwt-variables
+
+- !policy
+  id: my-app-db
+  annotations:
+    description: This policy contains the creds to access the DB for an imaginary "my-app"
+
+  body:
+    - !group
+
+    - &my-app-variables
+      - !variable dev/password
+      - !variable dev/url
+      - !variable dev/username
+      - !variable dev/cert-base64
+      - !variable dev/port
+      - !variable prod/password
+      - !variable prod/url
+      - !variable prod/username
+      - !variable prod/cert-base64
+      - !variable prod/port
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *my-app-variables
+
+- !policy
+  id: test-secrets-provider-standalone-app-db
+  annotations:
+    description: This policy contains the creds to access the secrets provider app DB
+
+  body:
+    - !group
+
+    - &secrets-provider-standalone-variables
+      - !variable password
+      - !variable url
+      - !variable username
+
+    - !permit
+      role: !group
+      privileges: [ read, execute ]
+      resources: *secrets-provider-standalone-variables

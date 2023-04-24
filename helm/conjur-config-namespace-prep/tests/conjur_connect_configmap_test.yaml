@@ -1,0 +1,163 @@
+suite: test conjur_connect_configmap
+
+templates:
+  - conjur_connect_configmap.yaml
+
+defaults: &defaultRequired
+  authnK8s.goldenConfigMap: conjur-configmap
+  authnK8s.namespace: golden
+  conjurConfigMap.authnStrategy: authn-k8s
+  test.mock.enable: true
+
+tests:
+  #=======================================================================
+  - it: should not create a ConfigMap if ConfigMap creation is disabled
+  #=======================================================================
+    set:
+      conjurConfigMap.create: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  #=======================================================================
+  - it: should use default values when those values are not set explicitly
+  #=======================================================================
+    set:
+      # Set required values
+      <<: *defaultRequired
+
+    asserts:
+      # Confirm that a ConfigMap has been created
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+
+
+      # Confirm that default values have been used
+      - equal:
+          path: metadata.name
+          value: conjur-connect
+
+
+     # Confirm that values are read from lookup()
+
+      - equal:
+          path: data.CONJUR_ACCOUNT
+          value: "mock-conjur-account"
+
+      - equal:
+          path: data.CONJUR_APPLIANCE_URL
+          value: "https://mock.example.com"
+
+      - equal:
+          path: data.CONJUR_AUTHN_URL
+          value: "https://mock.example.com/authn-k8s/mock-authenticator-id"
+
+
+  #=======================================================================
+  - it: should trim any trailing '/' characters from the appliance URL
+  #=======================================================================
+    set:
+      # Set required values
+      <<: *defaultRequired
+      test.mock.enable: true
+      conjurConfigMap.authnStrategy: "authn-k8s"
+
+      # Set an authenticator ID and an appliance URL with a trailing '/'
+      test.mock.conjurApplianceUrl: "https://test.example.com/"
+      test.mock.authnK8sAuthenticatorID: "test-authenticator-id"
+
+    asserts:
+      # Confirm that trailing '/' character has been trimmed
+      - equal:
+          path: data.CONJUR_AUTHN_URL
+          value: "https://test.example.com/authn-k8s/test-authenticator-id"
+
+
+  #=======================================================================
+  - it: should fail if both Golden ConfigMap and NameSpace are not set
+  #=======================================================================
+    set:
+      # Do not set the required values
+      #authnK8s.goldenConfigMap: conjur-configmap
+      #authnK8s.namespace: golden
+
+    asserts:
+      - failedTemplate:
+          errorMessage: "Both authnK8s.namespace and authnK8s.configMap are required"
+
+  #=======================================================================
+  - it: should allow ConfigMap name to be set explicitly
+  #=======================================================================
+    set:
+      # Set required values
+      <<: *defaultRequired
+
+      # Set explicit ConfigMap name
+      conjurConfigMap.name: "my-awesome-configmap"
+
+    asserts:
+      - equal:
+          path: metadata.name
+          value: "my-awesome-configmap"
+
+
+  #=======================================================================
+  - it: should fail if conjurAccount is not set in Golden ConfigMap
+  #=======================================================================
+    set:
+      # Set required values
+      <<: *defaultRequired
+
+      # Clear entry for conjurAccount
+      test.mock.conjurAccount:
+
+    asserts:
+      - failedTemplate:
+          errorMessage: "conjurAccount must be set in Golden ConfigMap"
+
+
+  #=======================================================================
+  - it: should fail if conjurApplianceUrl is not set in Golden ConfigMap
+  #=======================================================================
+    set:
+      # Set required values
+      <<: *defaultRequired
+
+      # Clear entry for conjurApplianceUrl
+      test.mock.conjurApplianceUrl:
+
+    asserts:
+      - failedTemplate:
+          errorMessage: "conjurApplianceUrl must be set in Golden ConfigMap"
+
+
+  #=======================================================================
+  - it: should fail if authnK8sAuthenticatorID is not set in Golden ConfigMap
+  #=======================================================================
+    set:
+      # Set required values
+      <<: *defaultRequired
+
+      # Clear entry for conjurAuthenticatorID
+      test.mock.authnK8sAuthenticatorID:
+
+    asserts:
+      - failedTemplate:
+          errorMessage: "authnK8sAuthenticatorID must be set in Golden ConfigMap"
+
+
+  #=======================================================================
+  - it: should fail if conjurSslCertificate is not set in Golden ConfigMap
+  #=======================================================================
+    set:
+      # Set required values
+      <<: *defaultRequired
+
+      # Clear entry for conjurSslCertificate
+      test.mock.conjurSslCertificate:
+
+    asserts:
+      - failedTemplate:
+          errorMessage: "conjurSslCertificate must be set in Golden ConfigMap"

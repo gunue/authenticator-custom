@@ -1,0 +1,36 @@
+---
+# This policy defines a group of whitelisted identities permitted to authenticate to the authn-jwt endpoint.
+- !policy
+  id: conjur/authn-jwt/{{ AUTHENTICATOR_ID }}/apps
+  annotations:
+    description: Identities permitted to authenticate
+  body:
+    - !group
+      annotations:
+        description: Group of authenticator identities permitted to call authn svc
+
+    - &hosts
+      - !host
+        id: system:serviceaccount:{{ TEST_APP_NAMESPACE_NAME }}:test-app-summon-sidecar
+        annotations:
+          authn-jwt/{{ AUTHENTICATOR_ID }}/kubernetes.io/namespace: {{ TEST_APP_NAMESPACE_NAME }}
+          authn-jwt/{{ AUTHENTICATOR_ID }}/kubernetes.io/serviceaccount/name: test-app-summon-sidecar
+
+      - !host
+        id: system:serviceaccount:{{ TEST_APP_NAMESPACE_NAME }}:test-app-secrets-provider-k8s-jwt
+        annotations:
+          authn-jwt/{{ AUTHENTICATOR_ID }}/sub: system:serviceaccount:{{ TEST_APP_NAMESPACE_NAME }}:test-app-secrets-provider-k8s-jwt
+
+      - !host
+        id: system:serviceaccount:{{ TEST_APP_NAMESPACE_NAME }}:test-secretless-app-jwt
+        annotations:
+          authn-jwt/{{ AUTHENTICATOR_ID }}/sub: system:serviceaccount:{{ TEST_APP_NAMESPACE_NAME }}:test-secretless-app-jwt
+
+      - !host
+        id: system:serviceaccount:{{ TEST_APP_NAMESPACE_NAME }}:test-app-secrets-provider-p2f-jwt
+        annotations:
+          authn-jwt/{{ AUTHENTICATOR_ID }}/sub: system:serviceaccount:{{ TEST_APP_NAMESPACE_NAME }}:test-app-secrets-provider-p2f-jwt
+
+    - !grant
+      role: !group
+      members: *hosts

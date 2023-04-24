@@ -1,0 +1,62 @@
+apiVersion: v2
+name: conjur-app-deploy
+home: https://www.conjur.org
+version: 0.2.1
+description: A Helm chart deploying an application with a Summon sidecar
+icon: https://www.cyberark.com/wp-content/uploads/2015/12/cybr-aim.jpg
+keywords:
+  - security
+  - "secrets management"
+sources:
+  - https://github.com/cyberark/conjur-authn-k8s-client
+  - https://github.com/cyberark/conjur-oss-helm-chart
+  - https://github.com/cyberark/conjur
+maintainers:
+  - name: Conjur Maintainers
+    email: conj_maintainers@cyberark.com
+    
+dependencies:
+    - name: app-summon-sidecar
+      repository: "file://charts/app-summon-sidecar"
+      version: ">= 0.0.1"
+      condition: app-summon-sidecar.enabled
+    - name: app-summon-sidecar-jwt
+      repository: "file://charts/app-summon-sidecar-jwt"
+      version: ">= 0.0.1"
+      condition: app-summon-sidecar-jwt.enabled
+    - name: app-secrets-provider-k8s
+      repository: "file://charts/app-secrets-provider-k8s"
+      version: ">= 0.0.1"
+      condition: app-secrets-provider-k8s.enabled
+    - name: app-secrets-provider-k8s-jwt
+      repository: "file://charts/app-secrets-provider-k8s-jwt"
+      version: ">= 0.0.1"
+      condition: app-secrets-provider-k8s-jwt.enabled
+    - name: app-secrets-provider-p2f
+      repository: "file://charts/app-secrets-provider-p2f"
+      version: ">= 0.0.1"
+      condition: app-secrets-provider-p2f.enabled
+    - name: app-secrets-provider-p2f-injected
+      repository: "file://charts/app-secrets-provider-p2f-injected"
+      version: ">= 0.0.1"
+      condition: app-secrets-provider-p2f-injected.enabled
+    - name: app-secrets-provider-p2f-jwt
+      repository: "file://charts/app-secrets-provider-p2f"
+      version: ">= 0.0.1"
+      condition: app-secrets-provider-p2f-jwt.enabled
+    - name: app-secrets-provider-rotation
+      repository: "file://charts/app-secrets-provider-rotation"
+      version: ">= 0.0.1"
+      condition: app-secrets-provider-rotation.enabled
+    - name: app-secretless-broker
+      repository: "file://charts/app-secretless-broker"
+      version: ">= 0.0.1"
+      condition: app-secretless-broker.enabled
+    - name: app-secretless-broker-jwt
+      repository: "file://charts/app-secretless-broker-jwt"
+      version: ">= 0.0.1"
+      condition: app-secretless-broker-jwt.enabled
+    - name: app-secrets-provider-standalone
+      repository: "file://charts/app-secrets-provider-standalone"
+      version: ">= 0.0.1"
+      condition: app-secrets-provider-standalone.enabled

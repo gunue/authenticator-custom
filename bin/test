@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -eox pipefail
+
+rm -rf test
+mkdir test
+
+junit_output_file="./test/junit.output"
+
+rm -f "$junit_output_file"
+touch "$junit_output_file"
+
+echo "Building unit test image..."
+docker build -f Dockerfile.test -t conjur-authn-k8s-client-test-runner:latest .
+
+echo "Running unit tests..."
+  docker run --rm -t --volume "$PWD"/test/:/conjur-authn-k8s-client/test/ \
+             conjur-authn-k8s-client-test-runner:latest \
+             -coverpkg ./... \
+             -coverprofile "./test/c.out.tmp" \
+             ./cmd/... \
+             ./pkg/... \
+             | tee -a "$junit_output_file"
+  echo "Unit test exit status: $?"

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+. bin/build_utils
+
+function main() {
+  retrieve_cyberark_ca_cert
+  build_docker_images
+}
+
+function build_docker_images {
+  # Supports two different tags to represent a tagged build (./bin/build) and
+  # dev build (env GOOS=darwin GOARCH=amd64 go build) of project binaries
+  IMAGE_NAME=conjur-authn-k8s-client
+  TAG=dev
+  TAG_SUFFIX="$(git_tag_suffix)"
+  VERSION=unreleased
+
+  # Version derived from CHANGELOG and automated release library
+  [ -f VERSION ] && VERSION=$(<VERSION)
+  readonly VERSION="${VERSION//"v"}"
+
+  echo "---"
+  echo "Building ${IMAGE_NAME} version ${VERSION} suffix ${TAG_SUFFIX} with tag ${TAG} <<"
+
+  docker build --tag "${IMAGE_NAME}:${TAG}" \
+               --build-arg VERSION="${VERSION}" \
+               --build-arg TAG_SUFFIX="${TAG_SUFFIX}" \
+               --target "authenticator-client" \
+               .
+
+  docker build --tag "${IMAGE_NAME}-redhat:${TAG}" \
+               --build-arg VERSION="$VERSION" \
+               --build-arg TAG_SUFFIX="${TAG_SUFFIX}" \
+               --target "authenticator-client-redhat" \
+               .
+
+  docker build --tag conjur-k8s-cluster-test:${TAG} \
+               --build-arg VERSION="$VERSION" \
+               --build-arg TAG_SUFFIX="${TAG_SUFFIX}" \
+               --target "k8s-cluster-test" \
+               .
+
+  echo "---"
+}
+
+main

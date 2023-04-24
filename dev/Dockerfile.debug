@@ -1,0 +1,17 @@
+FROM golang:1.18-bullseye
+
+# dlv for debugging
+RUN go get github.com/go-delve/delve/cmd/dlv
+# reflex for watching source files and re-running the app
+RUN go install github.com/cespare/reflex@latest
+
+WORKDIR /work
+COPY .  /work/
+
+RUN go get github.com/cyberark/conjur-opentelemetry-tracer@latest
+RUN go mod download
+
+COPY dev/dev.sh /work/
+
+CMD [ "bash", "dev/dev.sh" ]
+
