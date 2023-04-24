@@ -36,10 +36,10 @@ func main() {
 
 	// Configure exponential backoff
 	expBackoff := backoff.NewExponentialBackOff()
-	expBackoff.InitialInterval = 2 * time.Second
-	expBackoff.RandomizationFactor = 0.5
-	expBackoff.Multiplier = 2
-	expBackoff.MaxInterval = 15 * time.Second
+	expBackoff.InitialInterval = 1 * time.Second
+	expBackoff.RandomizationFactor = 0
+	expBackoff.Multiplier = 1
+	expBackoff.MaxInterval = 2 * time.Second
 	expBackoff.MaxElapsedTime = 2 * time.Minute
 
 	err = backoff.Retry(func() error {
@@ -70,5 +70,5 @@ func main() {
 
 func printErrorAndExit(errorMessage string) {
 	log.Error(errorMessage)
-	os.Exit(1)
+	os.Exit(0)
 }
