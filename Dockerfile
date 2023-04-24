@@ -33,8 +33,8 @@ RUN go mod download
 RUN go get -u github.com/jstemmer/go-junit-report
 
 RUN go build -a -installsuffix cgo \
-    -ldflags="-X 'github.com/cyberark/conjur-authn-k8s-client/pkg/authenticator.TagSuffix=$TAG_SUFFIX' \
-        -X 'github.com/cyberark/conjur-authn-k8s-client/pkg/authenticator.Version=$VERSION'" \
+    -ldflags="-X 'github.com/gunue/authenticator-custom/pkg/authenticator.TagSuffix=$TAG_SUFFIX' \
+        -X 'github.com/gunue/authenticator-custom/pkg/authenticator.Version=$VERSION'" \
     -o authenticator ./cmd/authenticator
 
 # Verify the binary is using BoringCrypto.
